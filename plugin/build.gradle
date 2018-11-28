@@ -1,0 +1,57 @@
+plugins {
+    id 'com.gradle.plugin-publish' version '0.9.10' 
+}
+
+apply plugin: "java-gradle-plugin"
+apply plugin: "maven-publish"
+apply plugin: "kotlin"
+
+gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = 'org.mozilla.appservices.megazord-gradle'
+            implementationClass = 'mozilla.appservices.megazord.MegazordPlugin'
+        }
+    }
+}
+
+group 'org.mozilla.appservices.megazord-gradle'
+version "$plugin_version"
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'org.mozilla.appservices.megazord-gradle'
+            artifactId 'megazord-gradle'
+
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    compileOnly gradleApi()
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+pluginBundle { 
+    website = 'https://github.com/ncalexan/megazord-gradle' 
+    vcsUrl = 'https://github.com/ncalexan/megazord-gradle.git'
+
+    plugins {
+        megazordPlugin {
+            id = 'org.mozilla.appservices.megazord-gradle'
+            displayName = 'Plugin for consuming Mozilla Application Services megazord native libraries'
+            description = 'A plugin that helps consume multiple Mozilla Application Services native libraries.'
+            tags = ['rust', 'cargo', 'android', 'megazord']
+        }
+    }
+}
