@@ -33,7 +33,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'gradle.plugin.org.mozilla.megazord-gradle:megazord-gradle:0.0.1'
+        classpath 'gradle.plugin.org.mozilla.megazord-gradle:megazord-gradle:0.1.0'
     }
 }
 ```
