@@ -41,7 +41,7 @@ buildscript {
 Then add a stanza like:
 
 ```groovy
-apply plugin: 'megazord-gradle'
+apply plugin: 'org.mozilla.appservices.megazord-gradle'
 ```
 
 to `build.gradle` files that consume Application Services Android libraries, either directly, like:

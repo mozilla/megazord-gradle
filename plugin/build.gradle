@@ -6,6 +6,9 @@ apply plugin: "java-gradle-plugin"
 apply plugin: "maven-publish"
 apply plugin: "kotlin"
 
+group 'org.mozilla.appservices.megazord-gradle'
+version "$plugin_version"
+
 gradlePlugin {
     plugins {
         simplePlugin {
@@ -14,9 +17,6 @@ gradlePlugin {
         }
     }
 }
-
-group 'org.mozilla.appservices.megazord-gradle'
-version "$plugin_version"
 
 publishing {
     publications {

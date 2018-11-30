@@ -35,7 +35,7 @@ open class MegazordPlugin : Plugin<Project> {
             }
 
             val substitution = "${megazord.moduleIdentifier.group}:${megazord.moduleIdentifier.name}:${requested.version}"
-            logger?.info("substituting megazord module '${substitution}' for '${requested.group}:${requested.module}:${requested.version}'")
+            logger?.info("substituting megazord module '${substitution}' for component module '${requested.group}:${requested.module}:${requested.version}'")
             dependency.useTarget(substitution)
         }
     }
@@ -81,7 +81,7 @@ open class MegazordPlugin : Plugin<Project> {
 
                 project.configurations.all { configuration ->
                     if (!configuration.isCanBeResolved()) {
-                        logger.debug("configuration ${configuration.name} cannot be resolved after project evaluation; not trying to substitute megazords")
+                        logger.debug("${configuration} cannot be resolved after project evaluation; not trying to substitute megazords")
                         return@all
                     }
 
@@ -90,29 +90,29 @@ open class MegazordPlugin : Plugin<Project> {
                         return@all
                     }
 
-                    logger.info("configuration ${configuration.name} resolves to ${modules}; looking for megazords")
+                    logger.info("${configuration} resolves to ${modules}; looking for megazords")
 
                     val candidates = findMegazordsForConfiguration(megazordExtension.megazords, modules, logger).sortedBy({ it.components.size })
 
                     val minimum = candidates.firstOrNull()
                     if (minimum == null) {
                         // Equivalent to candidates.isEmpty().
-                        logger.debug("no megazords found for configuration ${configuration.name}; skipping")
+                        logger.debug("no megazords found for ${configuration}; skipping")
                         return@all
                     }
 
                     // It's not okay to have megazords {A, B, C} and {A, B, D} for components {A, B}.
                     val minimums = candidates.filter { megazord -> megazord.components.size == minimum.components.size }
                     if (minimums.size > 1) {
-                        throw GradleException("multiple minimum megazords found for configuration ${configuration.name}: ${minimums.map { it.name }}")
+                        throw GradleException("multiple minimum megazords found for ${configuration}: ${minimums.map { it.name }}")
                     }
 
                     val leftOvers = minimum.components.minus(modules.map { it.moduleIdentifier })
                     if (megazordExtension.failIfMegazordIsStrictSuperset.get() && leftOvers.isNotEmpty()) {
-                        throw GradleException("minimum megazord ${minimum.name} contains modules not in transitive dependencies of configuration ${configuration.name}: ${leftOvers}")
+                        throw GradleException("minimum megazord ${minimum.name} contains modules not in transitive dependencies of ${configuration}: ${leftOvers}")
                     }
 
-                    logger.info("megazord found for configuration ${configuration.name}: ${minimum.name}")
+                    logger.info("megazord found for ${configuration}: ${minimum.name}")
 
                     configuration.resolutionStrategy.dependencySubstitution.substituteMegazord(minimum, logger)
                 }
