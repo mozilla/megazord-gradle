@@ -1,0 +1,6 @@
+includeBuild('../..') {
+    dependencySubstitution {
+        // As required.
+        substitute module('org.mozilla.appservices.megazord-gradle:megazord-gradle') with project(':plugin')
+    }
+}
